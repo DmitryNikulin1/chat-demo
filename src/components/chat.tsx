@@ -48,38 +48,58 @@ const Chat: FC = () => {
   };
 
   return (
-    <div className="h-screen max-w-[600px] bg-gray-900 text-white flex flex-col">
-      <header className="flex items-center justify-between p-4 bg-gray-800">
-        <div className="flex items-center">
-          <img src="/icons/back.svg" alt="back" />
-        </div>
-        <div>
-          <h2>Sandra Dorsett</h2>
-          <div className="text-xs text-center">Seen 1 hour ago</div>
-        </div>
-        <div className="rounded-full bg-gray-700 w-10 h-10 mr-2"></div>
-      </header>
+    <div className="min-h-screen grid place-items-center bg-gray-700">
+      <div className="h-screen w-full max-w-full lg:max-w-[600px] bg-gray-900 text-white flex flex-col">
+        <header className="flex items-center justify-between p-4 bg-gray-800">
+          <div className="flex items-center">
+            <img src="/icons/back.svg" alt="back" />
+          </div>
+          <div>
+            <h2>Sandra Dorsett</h2>
+            <div className="text-xs text-center">Seen 1 hour ago</div>
+          </div>
+          <div className="rounded-full bg-gray-700 w-10 h-10 mr-2"></div>
+        </header>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((message, index) => (
-          <Message key={index} text={message.text} time={message.time} />
-        ))}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messages.map((message, index) => (
+            <Message key={index} text={message.text} time={message.time} />
+          ))}
+        </div>
+
+        <footer className="p-4 bg-gray-800 flex items-center gap-4 justify-between">
+          <div className="w-7 h-7">
+            <img
+              src="/icons/paperclip.svg"
+              alt="Attach"
+              className="w-full h-full"
+            />
+          </div>
+          <div className="w-7 h-7">
+            <img
+              src="/icons/lightning.svg"
+              alt="Lightning"
+              className="w-full h-full"
+            />
+          </div>
+          <div className="flex-1">
+            <input
+              className="w-full bg-gray-700 text-white p-2 rounded-3xl"
+              placeholder="Send a message"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+          </div>
+          <div>
+            <button
+              className="bg-blue-500  rounded-full flex items-center justify-center"
+              onClick={handleSendMessage}
+            >
+              <img className="w-10 h-10" src="/icons/round.svg" alt="round" />
+            </button>
+          </div>
+        </footer>
       </div>
-
-      <footer className="p-4 bg-gray-800 flex items-center">
-        <input
-          className="flex-1 bg-gray-700 text-white p-2 rounded-l-lg"
-          placeholder="Send a message"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-        <button
-          className="bg-blue-500 p-2 rounded-r-lg"
-          onClick={handleSendMessage}
-        >
-          Send
-        </button>
-      </footer>
     </div>
   );
 };
