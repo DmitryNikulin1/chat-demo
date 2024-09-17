@@ -1,4 +1,4 @@
-import { useState, useEffect, FC } from "react";
+import { useState, useEffect, useRef, FC } from "react";
 import Message from "./message";
 
 const initialMessages = [
@@ -22,6 +22,7 @@ const Chat: FC = () => {
     );
   const [inputValue, setInputValue] = useState("");
   const [currentTime, setCurrentTime] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -34,6 +35,12 @@ const Chat: FC = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const handleSendMessage = () => {
     if (inputValue.trim() === "") return;
@@ -65,9 +72,11 @@ const Chat: FC = () => {
           {messages.map((message, index) => (
             <Message key={index} text={message.text} time={message.time} />
           ))}
+
+          <div ref={messagesEndRef} />
         </div>
 
-        <footer className="p-4 bg-gray-800 flex items-center gap-4 justify-between">
+        <footer className="p-4 bg-gray-800 flex items-center gap-4 justify-between sticky bottom-0">
           <div className="w-7 h-7">
             <img
               src="/icons/paperclip.svg"
