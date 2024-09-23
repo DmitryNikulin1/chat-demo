@@ -23,13 +23,20 @@ const Chat: FC = () => {
   const [inputValue, setInputValue] = useState("");
   const [currentTime, setCurrentTime] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
-      const hours = now.getHours().toString().padStart(2, "0");
+      let hours = now.getHours();
       const minutes = now.getMinutes().toString().padStart(2, "0");
-      const formattedTime = `${hours}:${minutes}`;
+
+      const ampm = hours >= 12 ? "PM" : "AM";
+
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+
+      const formattedTime = `${hours}:${minutes} ${ampm}`;
       setCurrentTime(formattedTime);
     }, 1000);
 
@@ -52,6 +59,29 @@ const Chat: FC = () => {
 
     setMessages((prevMessages) => [...prevMessages, newMessage]);
     setInputValue("");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSendMessage();
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const fileMessage = {
+        text: `File attached: ${files[0].name}`,
+        time: currentTime,
+        images: [URL.createObjectURL(files[0])],
+      };
+
+      setMessages((prevMessages) => [...prevMessages, fileMessage]);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
   };
 
   return (
@@ -77,12 +107,20 @@ const Chat: FC = () => {
         </div>
 
         <footer className="p-4 bg-gray-800 flex items-center gap-4 justify-between sticky bottom-0">
+          <input
+            ref={fileInputRef}
+            type="file"
+            className="hidden"
+            onChange={handleFileChange}
+          />
           <div className="w-7 h-7">
-            <img
-              src="/icons/paperclip.svg"
-              alt="Attach"
-              className="w-full h-full"
-            />
+            <button onClick={() => fileInputRef.current?.click()}>
+              <img
+                src="/icons/paperclip.svg"
+                alt="Attach"
+                className="w-full h-full"
+              />
+            </button>
           </div>
           <div className="w-7 h-7">
             <img
@@ -97,14 +135,19 @@ const Chat: FC = () => {
               placeholder="Send a message"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
           </div>
           <div>
             <button
-              className="bg-blue-500  rounded-full flex items-center justify-center"
+              className="flex items-center justify-center"
               onClick={handleSendMessage}
             >
-              <img className="w-10 h-10" src="/icons/round.svg" alt="round" />
+              <img
+                className="w-10 h-10 fill-gray-500"
+                src="/icons/round.svg"
+                alt="round"
+              />
             </button>
           </div>
         </footer>

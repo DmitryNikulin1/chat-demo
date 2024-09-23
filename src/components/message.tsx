@@ -8,7 +8,7 @@ interface MessageProps {
 
 const Message: FC<MessageProps> = ({ text, time, images }) => {
   return (
-    <div className="relative flex flex-col">
+    <div className="relative flex flex-col ">
       <div className="flex items-start">
         <div className="rounded-full bg-gray-700 w-8 h-8 mr-4 absolute left-0 top-0"></div>
         <div className="bg-gray-800 p-3 rounded-lg max-w-xs ml-12">
